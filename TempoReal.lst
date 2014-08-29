@@ -1,0 +1,1953 @@
+CCS PCM C Compiler, Version 4.065, 38112               24-jul-08 18:22
+
+               Filename: C:\Documents and Settings\Mateus.MATEUS-CELERON\Desktop\Tempo Real\PIC\TempoReal.lst
+
+               ROM used: 1281 words (63%)
+                         Largest free fragment is 767
+               RAM used: 42 (19%) at main() level
+                         80 (36%) worst case
+               Stack:    4 worst case (2 in main + 2 for interrupts)
+
+*
+0000:  MOVLW  00
+0001:  MOVWF  0A
+0002:  GOTO   4CD
+0003:  NOP
+0004:  MOVWF  7F
+0005:  SWAPF  03,W
+0006:  CLRF   03
+0007:  MOVWF  21
+0008:  MOVF   7F,W
+0009:  MOVWF  20
+000A:  MOVF   0A,W
+000B:  MOVWF  28
+000C:  CLRF   0A
+000D:  SWAPF  20,F
+000E:  MOVF   04,W
+000F:  MOVWF  22
+0010:  MOVF   77,W
+0011:  MOVWF  23
+0012:  MOVF   78,W
+0013:  MOVWF  24
+0014:  MOVF   79,W
+0015:  MOVWF  25
+0016:  MOVF   7A,W
+0017:  MOVWF  26
+0018:  MOVF   7B,W
+0019:  MOVWF  27
+001A:  BCF    03.7
+001B:  BCF    03.5
+001C:  MOVLW  8C
+001D:  MOVWF  04
+001E:  BTFSS  00.5
+001F:  GOTO   022
+0020:  BTFSC  0C.5
+0021:  GOTO   058
+0022:  MOVF   22,W
+0023:  MOVWF  04
+0024:  MOVF   23,W
+0025:  MOVWF  77
+0026:  MOVF   24,W
+0027:  MOVWF  78
+0028:  MOVF   25,W
+0029:  MOVWF  79
+002A:  MOVF   26,W
+002B:  MOVWF  7A
+002C:  MOVF   27,W
+002D:  MOVWF  7B
+002E:  MOVF   28,W
+002F:  MOVWF  0A
+0030:  SWAPF  21,W
+0031:  MOVWF  03
+0032:  SWAPF  7F,F
+0033:  SWAPF  7F,W
+0034:  RETFIE
+.................... /*############################################################################ 
+....................   #                     Emulação de PLC em PIC                               # 
+....................   #                    Programação em Tempo Real                             # 
+....................   #                     Alexandre A. S. Lopes                                # 
+....................   #                      Alexandre O. Santos                                 # 
+....................   #                5º ano engenharia da computação - FACIT                   #   
+....................   #                    Prof. Renato Dourado Maia                             #    
+....................   ############################################################################*/ 
+....................  
+.................... //------------------------------------------------------------------------------ 
+.................... #include <16F628A.h> 
+.................... //////// Standard Header file for the PIC16F628A device //////////////// 
+.................... #device PIC16F628A 
+.................... #list 
+....................  
+.................... #include <stdlibm.h> 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... ////        (C) Copyright 1996,2003 Custom Computer Services           //// 
+.................... //// This source code may only be used by licensed users of the CCS C  //// 
+.................... //// compiler.  This source code may only be distributed to other      //// 
+.................... //// licensed users of the CCS C compiler.  No other use, reproduction //// 
+.................... //// or distribution is permitted without written permission.          //// 
+.................... //// Derivative programs created using this software in object code    //// 
+.................... //// form are not restricted in any way.                               //// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+....................  
+....................  
+.................... /*********************************************************************/ 
+.................... #ifndef _STDLIBM 
+.................... #define _STDLIBM 
+.................... #USE DYNAMIC_MEMORY 
+.................... /* Memory Management Functions*/ 
+.................... #include <stddef.h> 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... ////        (C) Copyright 1996,2003 Custom Computer Services           //// 
+.................... //// This source code may only be used by licensed users of the CCS C  //// 
+.................... //// compiler.  This source code may only be distributed to other      //// 
+.................... //// licensed users of the CCS C compiler.  No other use, reproduction //// 
+.................... //// or distribution is permitted without written permission.          //// 
+.................... //// Derivative programs created using this software in object code    //// 
+.................... //// form are not restricted in any way.                               //// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+....................  
+.................... #ifndef _STDDEF 
+....................  
+.................... #define _STDDEF 
+....................  
+.................... #if sizeof(unsigned int8 *)==1 
+.................... #define ptrdiff_t unsigned int8 
+.................... #else 
+.................... #define ptrdiff_t unsigned int16 
+.................... #endif 
+....................  
+.................... #define size_t unsigned int8 
+.................... #define wchar_t char 
+.................... #define NULL 0 
+....................  
+.................... #define offsetof(s,f) (offsetofbit(s,f)/8) 
+....................  
+.................... #endif 
+....................  
+.................... #if defined(__PCB__) 
+.................... typedef struct nodet { 
+....................    unsigned int8 size; 
+....................    unsigned int8 next; }node_t; 
+.................... #elif defined(__PCM__) 
+.................... typedef struct nodet { 
+....................    unsigned int8 size; 
+....................    unsigned int16 next; }node_t; 
+.................... #elif defined(__PCH__) 
+.................... typedef struct nodet { 
+....................    unsigned int16 size; 
+....................    unsigned int16 next; }node_t; 
+.................... #elif defined(__PCD__) 
+.................... typedef struct nodet { 
+....................    unsigned int16 size; 
+....................    unsigned int16 next; }node_t; 
+.................... #endif 
+.................... #include <memmgmt.c> 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... ////        (C) Copyright 1996,2003 Custom Computer Services           //// 
+.................... //// This source code may only be used by licensed users of the CCS C  //// 
+.................... //// compiler.  This source code may only be distributed to other      //// 
+.................... //// licensed users of the CCS C compiler.  No other use, reproduction //// 
+.................... //// or distribution is permitted without written permission.          //// 
+.................... //// Derivative programs created using this software in object code    //// 
+.................... //// form are not restricted in any way.                               //// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+....................  
+.................... #if defined(__PCH__) 
+.................... node_t * create_node(long size,node_t *ptr ) // create node at given location 
+.................... { 
+....................    node_t *result; 
+....................    result =ptr; 
+....................    result->size=size; 
+....................    result->next = NULL; 
+....................    return result; 
+.................... } 
+.................... void update_node(node_t *node,long size) // update the size of given node 
+.................... { 
+....................    node->size=size; 
+.................... } 
+.................... #define csize 32768 
+.................... #define pos 15 
+.................... #else 
+.................... node_t * create_node(int size,node_t *ptr ) // create node at given location 
+.................... { 
+....................    node_t *result; 
+....................    result =ptr; 
+*
+00B0:  MOVF   65,W
+00B1:  MOVWF  67
+00B2:  MOVF   64,W
+00B3:  MOVWF  66
+....................    result->size=size; 
+00B4:  MOVF   66,W
+00B5:  MOVWF  04
+00B6:  BCF    03.7
+00B7:  BTFSC  67.0
+00B8:  BSF    03.7
+00B9:  MOVF   63,W
+00BA:  MOVWF  00
+....................    result->next = NULL; 
+00BB:  MOVLW  01
+00BC:  ADDWF  66,W
+00BD:  MOVWF  04
+00BE:  BCF    03.7
+00BF:  BTFSC  67.0
+00C0:  BSF    03.7
+00C1:  INCF   04,F
+00C2:  CLRF   00
+00C3:  DECF   04,F
+00C4:  CLRF   00
+....................    return result; 
+00C5:  MOVF   66,W
+00C6:  MOVWF  78
+00C7:  MOVF   67,W
+00C8:  MOVWF  79
+.................... } 
+....................  
+.................... void update_node(node_t *node,int size)// update the size of given node 
+.................... { 
+....................    node->size=size; 
+*
+0050:  MOVF   5E,W
+0051:  MOVWF  04
+0052:  BCF    03.7
+0053:  BTFSC  5F.0
+0054:  BSF    03.7
+0055:  MOVF   60,W
+0056:  MOVWF  00
+.................... } 
+0057:  RETLW  00
+....................  
+.................... #define csize 128 
+.................... #define pos 7 
+.................... #endif 
+....................  
+.................... /* Insert node immediately after place */ //old,new 
+.................... void insert_node_after(node_t *place,node_t *node)// place the node after another given node 
+.................... { 
+....................     if (place->next==NULL) 
+*
+00D5:  MOVLW  01
+00D6:  ADDWF  5B,W
+00D7:  MOVWF  04
+00D8:  BCF    03.7
+00D9:  BTFSC  5C.0
+00DA:  BSF    03.7
+00DB:  INCF   04,F
+00DC:  MOVF   00,W
+00DD:  MOVWF  60
+00DE:  DECF   04,F
+00DF:  MOVF   00,W
+00E0:  MOVWF  5F
+00E1:  MOVF   5F,F
+00E2:  BTFSS  03.2
+00E3:  GOTO   0F2
+00E4:  MOVF   60,F
+00E5:  BTFSS  03.2
+00E6:  GOTO   0F2
+....................        node->next= NULL; 
+00E7:  MOVLW  01
+00E8:  ADDWF  5D,W
+00E9:  MOVWF  04
+00EA:  BCF    03.7
+00EB:  BTFSC  5E.0
+00EC:  BSF    03.7
+00ED:  INCF   04,F
+00EE:  CLRF   00
+00EF:  DECF   04,F
+00F0:  CLRF   00
+....................     else 
+00F1:  GOTO   112
+....................        node->next=place->next; 
+00F2:  MOVLW  01
+00F3:  ADDWF  5D,W
+00F4:  MOVWF  78
+00F5:  MOVF   5E,W
+00F6:  MOVWF  7A
+00F7:  BTFSC  03.0
+00F8:  INCF   7A,F
+00F9:  MOVF   7A,W
+00FA:  MOVWF  60
+00FB:  MOVLW  01
+00FC:  ADDWF  5B,W
+00FD:  MOVWF  04
+00FE:  BCF    03.7
+00FF:  BTFSC  5C.0
+0100:  BSF    03.7
+0101:  INCF   04,F
+0102:  MOVF   00,W
+0103:  MOVWF  7A
+0104:  DECF   04,F
+0105:  MOVF   00,W
+0106:  MOVWF  61
+0107:  MOVF   78,W
+0108:  MOVWF  04
+0109:  BCF    03.7
+010A:  BTFSC  60.0
+010B:  BSF    03.7
+010C:  INCF   04,F
+010D:  MOVF   7A,W
+010E:  MOVWF  00
+010F:  DECF   04,F
+0110:  MOVF   61,W
+0111:  MOVWF  00
+....................     place->next=node; 
+0112:  MOVLW  01
+0113:  ADDWF  5B,W
+0114:  MOVWF  04
+0115:  BCF    03.7
+0116:  BTFSC  5C.0
+0117:  BSF    03.7
+0118:  INCF   04,F
+0119:  MOVF   5E,W
+011A:  MOVWF  00
+011B:  DECF   04,F
+011C:  MOVF   5D,W
+011D:  MOVWF  00
+.................... } 
+....................  
+.................... ///////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+....................  
+.................... void remove_node(node_t *node) {// remove the given node from the memlist 
+....................    node_t *ptr; 
+....................    for(ptr=__DYNAMIC_HEAD;ptr->next!=node;ptr=ptr->next); 
+*
+02E5:  MOVF   2A,W
+02E6:  MOVWF  61
+02E7:  MOVF   29,W
+02E8:  MOVWF  60
+02E9:  MOVLW  01
+02EA:  ADDWF  60,W
+02EB:  MOVWF  04
+02EC:  BCF    03.7
+02ED:  BTFSC  61.0
+02EE:  BSF    03.7
+02EF:  INCF   04,F
+02F0:  MOVF   00,W
+02F1:  MOVWF  63
+02F2:  DECF   04,F
+02F3:  MOVF   00,W
+02F4:  MOVWF  62
+02F5:  MOVF   5E,W
+02F6:  SUBWF  62,W
+02F7:  BTFSS  03.2
+02F8:  GOTO   2FD
+02F9:  MOVF   5F,W
+02FA:  SUBWF  63,W
+02FB:  BTFSC  03.2
+02FC:  GOTO   30C
+02FD:  MOVLW  01
+02FE:  ADDWF  60,W
+02FF:  MOVWF  04
+0300:  BCF    03.7
+0301:  BTFSC  61.0
+0302:  BSF    03.7
+0303:  INCF   04,F
+0304:  MOVF   00,W
+0305:  MOVWF  7A
+0306:  DECF   04,F
+0307:  MOVF   00,W
+0308:  MOVWF  60
+0309:  MOVF   7A,W
+030A:  MOVWF  61
+030B:  GOTO   2E9
+....................    ptr->next=node->next; 
+030C:  MOVLW  01
+030D:  ADDWF  60,W
+030E:  MOVWF  78
+030F:  MOVF   61,W
+0310:  MOVWF  7A
+0311:  BTFSC  03.0
+0312:  INCF   7A,F
+0313:  MOVF   7A,W
+0314:  MOVWF  63
+0315:  MOVLW  01
+0316:  ADDWF  5E,W
+0317:  MOVWF  04
+0318:  BCF    03.7
+0319:  BTFSC  5F.0
+031A:  BSF    03.7
+031B:  INCF   04,F
+031C:  MOVF   00,W
+031D:  MOVWF  7A
+031E:  DECF   04,F
+031F:  MOVF   00,W
+0320:  MOVWF  64
+0321:  MOVF   78,W
+0322:  MOVWF  04
+0323:  BCF    03.7
+0324:  BTFSC  63.0
+0325:  BSF    03.7
+0326:  INCF   04,F
+0327:  MOVF   7A,W
+0328:  MOVWF  00
+0329:  DECF   04,F
+032A:  MOVF   64,W
+032B:  MOVWF  00
+....................    node=NULL; 
+032C:  CLRF   5F
+032D:  CLRF   5E
+.................... } 
+....................  
+.................... ///////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+....................  
+.................... /* 
+.................... void print_list() { // print the current memlist 
+....................     node_t *node; 
+....................     printf( "\r\nThe list is \n\r"); 
+....................     for(node = __DYNAMIC_HEAD; node != NULL; node = node->next) 
+....................         printf( "%lx--%x--\n\r",node,node->size); 
+....................     printf( "size of node_t %u\r\n",sizeof(node_t)); 
+.................... } 
+.................... */ 
+....................  
+....................  
+....................  
+....................  
+.................... void traverse() 
+.................... { 
+....................    node_t *node,*temp; 
+....................    unsigned int16 nsize,nextsize; 
+....................    node=__DYNAMIC_HEAD; 
+*
+0280:  MOVF   2A,W
+0281:  MOVWF  57
+0282:  MOVF   29,W
+0283:  MOVWF  56
+....................    while(node!=NULL) 
+....................    { 
+0284:  MOVF   56,F
+0285:  BTFSS  03.2
+0286:  GOTO   28A
+0287:  MOVF   57,F
+0288:  BTFSC  03.2
+0289:  GOTO   354
+....................      if(!bit_test(node->size,pos))// node free 
+028A:  MOVF   56,W
+028B:  MOVWF  04
+028C:  BCF    03.7
+028D:  BTFSC  57.0
+028E:  BSF    03.7
+028F:  MOVF   00,W
+0290:  MOVWF  5E
+0291:  BTFSC  5E.7
+0292:  GOTO   345
+....................       { 
+....................          nsize=node->size; 
+0293:  MOVF   56,W
+0294:  MOVWF  04
+0295:  BCF    03.7
+0296:  BTFSC  57.0
+0297:  BSF    03.7
+0298:  MOVF   00,W
+0299:  CLRF   7A
+029A:  MOVWF  5A
+029B:  MOVF   7A,W
+029C:  MOVWF  5B
+....................          temp=(unsigned int16)node->next; 
+029D:  MOVLW  01
+029E:  ADDWF  56,W
+029F:  MOVWF  04
+02A0:  BCF    03.7
+02A1:  BTFSC  57.0
+02A2:  BSF    03.7
+02A3:  INCF   04,F
+02A4:  MOVF   00,W
+02A5:  MOVWF  59
+02A6:  DECF   04,F
+02A7:  MOVF   00,W
+02A8:  MOVWF  58
+....................          if(!bit_test(temp->size,pos)&& (temp==((unsigned int16)node+nsize+sizeof(node_t))))//next node free and consecutive, so combine 
+02A9:  MOVF   58,W
+02AA:  MOVWF  04
+02AB:  BCF    03.7
+02AC:  BTFSC  59.0
+02AD:  BSF    03.7
+02AE:  MOVF   00,W
+02AF:  MOVWF  5E
+02B0:  BTFSC  5E.7
+02B1:  GOTO   336
+02B2:  MOVF   5A,W
+02B3:  ADDWF  56,W
+02B4:  MOVWF  5F
+02B5:  MOVF   57,W
+02B6:  MOVWF  60
+02B7:  MOVF   5B,W
+02B8:  BTFSC  03.0
+02B9:  INCFSZ 5B,W
+02BA:  ADDWF  60,F
+02BB:  MOVLW  03
+02BC:  ADDWF  5F,W
+02BD:  MOVWF  78
+02BE:  MOVF   60,W
+02BF:  MOVWF  7A
+02C0:  BTFSC  03.0
+02C1:  INCF   7A,F
+02C2:  MOVF   78,W
+02C3:  SUBWF  58,W
+02C4:  BTFSS  03.2
+02C5:  GOTO   336
+02C6:  MOVF   7A,W
+02C7:  SUBWF  59,W
+02C8:  BTFSS  03.2
+02C9:  GOTO   336
+....................          { 
+....................             nextsize=temp->size; 
+02CA:  MOVF   58,W
+02CB:  MOVWF  04
+02CC:  BCF    03.7
+02CD:  BTFSC  59.0
+02CE:  BSF    03.7
+02CF:  MOVF   00,W
+02D0:  CLRF   7A
+02D1:  MOVWF  5C
+02D2:  MOVF   7A,W
+02D3:  MOVWF  5D
+....................             nsize+=nextsize+sizeof(node_t); 
+02D4:  MOVLW  03
+02D5:  ADDWF  5C,W
+02D6:  MOVWF  78
+02D7:  MOVF   5D,W
+02D8:  MOVWF  7A
+02D9:  BTFSC  03.0
+02DA:  INCF   7A,F
+02DB:  MOVF   78,W
+02DC:  ADDWF  5A,F
+02DD:  MOVF   7A,W
+02DE:  BTFSC  03.0
+02DF:  INCFSZ 7A,W
+02E0:  ADDWF  5B,F
+....................             remove_node(temp); 
+02E1:  MOVF   59,W
+02E2:  MOVWF  5F
+02E3:  MOVF   58,W
+02E4:  MOVWF  5E
+....................             update_node(node,nsize); 
+*
+032E:  MOVF   57,W
+032F:  MOVWF  5F
+0330:  MOVF   56,W
+0331:  MOVWF  5E
+0332:  MOVF   5A,W
+0333:  MOVWF  60
+0334:  CALL   050
+....................          } 
+....................          else 
+0335:  GOTO   344
+....................          node=node->next; 
+0336:  MOVLW  01
+0337:  ADDWF  56,W
+0338:  MOVWF  04
+0339:  BCF    03.7
+033A:  BTFSC  57.0
+033B:  BSF    03.7
+033C:  INCF   04,F
+033D:  MOVF   00,W
+033E:  MOVWF  7A
+033F:  DECF   04,F
+0340:  MOVF   00,W
+0341:  MOVWF  56
+0342:  MOVF   7A,W
+0343:  MOVWF  57
+....................       } 
+....................       else 
+0344:  GOTO   353
+....................       node=node->next; 
+0345:  MOVLW  01
+0346:  ADDWF  56,W
+0347:  MOVWF  04
+0348:  BCF    03.7
+0349:  BTFSC  57.0
+034A:  BSF    03.7
+034B:  INCF   04,F
+034C:  MOVF   00,W
+034D:  MOVWF  7A
+034E:  DECF   04,F
+034F:  MOVF   00,W
+0350:  MOVWF  56
+0351:  MOVF   7A,W
+0352:  MOVWF  57
+....................    } 
+0353:  GOTO   284
+.................... } 
+....................  
+.................... char *malloc(size_t size) 
+.................... { 
+....................    node_t *node,*new; 
+....................    unsigned int16 nsize; 
+....................    node=__DYNAMIC_HEAD; 
+*
+005A:  MOVF   2A,W
+005B:  MOVWF  56
+005C:  MOVF   29,W
+005D:  MOVWF  55
+....................    while(node!=NULL) // chk until end of memlist 
+....................    { 
+005E:  MOVF   55,F
+005F:  BTFSS  03.2
+0060:  GOTO   064
+0061:  MOVF   56,F
+0062:  BTFSC  03.2
+0063:  GOTO   147
+....................       if(!bit_test(node->size,pos) && node->size >=size) // node is free and > = req size 
+0064:  MOVF   55,W
+0065:  MOVWF  04
+0066:  BCF    03.7
+0067:  BTFSC  56.0
+0068:  BSF    03.7
+0069:  MOVF   00,W
+006A:  MOVWF  5B
+006B:  BTFSC  5B.7
+006C:  GOTO   138
+006D:  MOVF   55,W
+006E:  MOVWF  04
+006F:  BCF    03.7
+0070:  BTFSC  56.0
+0071:  BSF    03.7
+0072:  MOVF   54,W
+0073:  SUBWF  00,W
+0074:  BTFSS  03.0
+0075:  GOTO   138
+....................       { 
+....................          nsize=node->size; 
+0076:  MOVF   55,W
+0077:  MOVWF  04
+0078:  BCF    03.7
+0079:  BTFSC  56.0
+007A:  BSF    03.7
+007B:  MOVF   00,W
+007C:  CLRF   7A
+007D:  MOVWF  59
+007E:  MOVF   7A,W
+007F:  MOVWF  5A
+....................          if(nsize>size +sizeof(node_t)) //node > req size, so split and add new node to memlist 
+0080:  MOVLW  03
+0081:  ADDWF  54,W
+0082:  MOVF   5A,F
+0083:  BTFSS  03.2
+0084:  GOTO   08A
+0085:  SUBWF  59,W
+0086:  BTFSC  03.2
+0087:  GOTO   129
+0088:  BTFSS  03.0
+0089:  GOTO   129
+....................          { 
+....................             new=create_node(nsize-size-sizeof(node_t),(unsigned int16)node+sizeof(node_t)+size); 
+008A:  MOVF   54,W
+008B:  SUBWF  59,W
+008C:  MOVWF  5B
+008D:  MOVF   5A,W
+008E:  MOVWF  5C
+008F:  MOVLW  00
+0090:  BTFSS  03.0
+0091:  MOVLW  01
+0092:  SUBWF  5C,F
+0093:  MOVLW  03
+0094:  SUBWF  5B,W
+0095:  MOVWF  5D
+0096:  MOVF   5C,W
+0097:  MOVWF  5E
+0098:  MOVLW  00
+0099:  BTFSS  03.0
+009A:  MOVLW  01
+009B:  SUBWF  5E,F
+009C:  MOVLW  03
+009D:  ADDWF  55,W
+009E:  MOVWF  5F
+009F:  MOVF   56,W
+00A0:  MOVWF  60
+00A1:  BTFSC  03.0
+00A2:  INCF   60,F
+00A3:  MOVF   54,W
+00A4:  ADDWF  5F,W
+00A5:  MOVWF  61
+00A6:  MOVF   60,W
+00A7:  MOVWF  62
+00A8:  BTFSC  03.0
+00A9:  INCF   62,F
+00AA:  MOVF   5D,W
+00AB:  MOVWF  63
+00AC:  MOVF   62,W
+00AD:  MOVWF  65
+00AE:  MOVF   61,W
+00AF:  MOVWF  64
+*
+00C9:  MOVF   79,W
+00CA:  MOVWF  58
+00CB:  MOVF   78,W
+00CC:  MOVWF  57
+....................             insert_node_after(node,new); 
+00CD:  MOVF   56,W
+00CE:  MOVWF  5C
+00CF:  MOVF   55,W
+00D0:  MOVWF  5B
+00D1:  MOVF   58,W
+00D2:  MOVWF  5E
+00D3:  MOVF   57,W
+00D4:  MOVWF  5D
+....................             update_node(node,size+csize); 
+*
+011E:  MOVLW  80
+011F:  ADDWF  54,W
+0120:  MOVWF  5B
+0121:  MOVF   56,W
+0122:  MOVWF  5F
+0123:  MOVF   55,W
+0124:  MOVWF  5E
+0125:  MOVF   5B,W
+0126:  MOVWF  60
+0127:  CALL   050
+....................          } 
+....................          else//not enough space for new node so use original size 
+0128:  GOTO   137
+....................          update_node(node,nsize+csize); 
+0129:  MOVLW  80
+012A:  ADDWF  59,W
+012B:  MOVWF  5B
+012C:  MOVF   5A,W
+012D:  MOVWF  5C
+012E:  BTFSC  03.0
+012F:  INCF   5C,F
+0130:  MOVF   56,W
+0131:  MOVWF  5F
+0132:  MOVF   55,W
+0133:  MOVWF  5E
+0134:  MOVF   5B,W
+0135:  MOVWF  60
+0136:  CALL   050
+....................          //end if 
+....................          break; 
+0137:  GOTO   147
+....................       }//end if 
+....................       node=node->next; 
+0138:  MOVLW  01
+0139:  ADDWF  55,W
+013A:  MOVWF  04
+013B:  BCF    03.7
+013C:  BTFSC  56.0
+013D:  BSF    03.7
+013E:  INCF   04,F
+013F:  MOVF   00,W
+0140:  MOVWF  7A
+0141:  DECF   04,F
+0142:  MOVF   00,W
+0143:  MOVWF  55
+0144:  MOVF   7A,W
+0145:  MOVWF  56
+....................    }//end while 
+0146:  GOTO   05E
+....................    if(node==NULL)// reached end without finding an appropriate node 
+0147:  MOVF   55,F
+0148:  BTFSS  03.2
+0149:  GOTO   152
+014A:  MOVF   56,F
+014B:  BTFSS  03.2
+014C:  GOTO   152
+....................    { 
+....................       //prunsigned int8f("\r\n Not enough memory for allocation"); 
+....................       return NULL; 
+014D:  MOVLW  00
+014E:  MOVWF  78
+014F:  MOVWF  79
+0150:  GOTO   15C
+....................    } 
+....................    else 
+0151:  GOTO   15C
+....................    return (char *)node+sizeof(node_t); // return pounsigned int8er to allocated space 
+0152:  MOVLW  03
+0153:  ADDWF  55,W
+0154:  MOVWF  78
+0155:  MOVF   56,W
+0156:  MOVWF  7A
+0157:  BTFSC  03.0
+0158:  INCF   7A,F
+0159:  MOVF   7A,W
+015A:  MOVWF  79
+015B:  GOTO   15C
+.................... } 
+....................  
+.................... char *calloc(size_t nmemb,size_t size) 
+.................... { 
+....................    node_t *node,*new; 
+....................    unsigned int16 nsize,resize; 
+....................    node=__DYNAMIC_HEAD; 
+....................    resize=nmemb*size; 
+....................    while(node!=NULL) // chk until end of memlist 
+....................    { 
+....................       if(!bit_test(node->size,pos) && node->size >=resize)// node is free and > = req size 
+....................       { 
+....................          nsize=node->size; 
+....................          if(nsize>resize+sizeof(node_t))//node > req size, so split and add new node to memlist 
+....................          { 
+....................             new=create_node(nsize-resize-sizeof(node_t),(unsigned int16)node+sizeof(node_t)+resize); 
+....................             insert_node_after(node,new); 
+....................             update_node(node,resize+csize); 
+....................          } 
+....................          else//not enough space for new node so use original size 
+....................          update_node(node,nsize+csize); 
+....................          //end if 
+....................          break; 
+....................       }//end if 
+....................       node=node->next; 
+....................    }//end while 
+....................    if(node==NULL)// reached end without finding an appropriate node 
+....................    { 
+....................       //prunsigned int8f("\r\n Not enough memory for allocation"); 
+....................       return NULL; 
+....................    } 
+....................    else 
+....................    { 
+....................       memset((unsigned int16)node+sizeof(node_t),0,resize);// initialize to 0 
+....................       return (char *)(unsigned int16)node+sizeof(node_t);// return pounsigned int8er to allocated space 
+....................    } 
+.................... } 
+.................... void free( void * ptr) 
+.................... { 
+....................    node_t *node; 
+....................    unsigned int16 nsize; 
+....................  
+....................    if(ptr==NULL) // not a valid pounsigned int8er 
+*
+0250:  MOVF   50,F
+0251:  BTFSS  03.2
+0252:  GOTO   258
+0253:  MOVF   51,F
+0254:  BTFSS  03.2
+0255:  GOTO   258
+....................       return; 
+0256:  GOTO   354
+....................    else 
+0257:  GOTO   280
+....................    { 
+....................       node=ptr-sizeof(node_t); 
+0258:  MOVLW  03
+0259:  SUBWF  50,W
+025A:  MOVWF  52
+025B:  MOVF   51,W
+025C:  MOVWF  53
+025D:  MOVLW  00
+025E:  BTFSS  03.0
+025F:  MOVLW  01
+0260:  SUBWF  53,F
+....................       if(bit_test(node->size,pos))// node occupied 
+0261:  MOVF   52,W
+0262:  MOVWF  04
+0263:  BCF    03.7
+0264:  BTFSC  53.0
+0265:  BSF    03.7
+0266:  MOVF   00,W
+0267:  MOVWF  56
+0268:  BTFSS  56.7
+0269:  GOTO   27D
+....................       { 
+....................          nsize=node->size-csize; 
+026A:  MOVF   52,W
+026B:  MOVWF  04
+026C:  BCF    03.7
+026D:  BTFSC  53.0
+026E:  BSF    03.7
+026F:  MOVLW  80
+0270:  SUBWF  00,W
+0271:  MOVWF  54
+0272:  CLRF   55
+....................          update_node(node,nsize); 
+0273:  MOVF   53,W
+0274:  MOVWF  5F
+0275:  MOVF   52,W
+0276:  MOVWF  5E
+0277:  MOVF   54,W
+0278:  MOVWF  60
+0279:  CALL   050
+....................          ptr=NULL; 
+027A:  CLRF   51
+027B:  CLRF   50
+....................  
+....................       } 
+....................       else // wrong input, return 
+027C:  GOTO   280
+....................       { 
+....................          ptr=NULL; 
+027D:  CLRF   51
+027E:  CLRF   50
+....................          return; 
+027F:  GOTO   354
+....................       } 
+....................    } 
+....................    traverse(); 
+.................... } 
+....................  
+.................... char *realloc(void *ptr,size_t size) 
+.................... { 
+....................    node_t *node,*new,*temp; 
+....................    unsigned int16 nsize,nextsize; 
+....................  
+....................    if(ptr==NULL)// null pounsigned int8er, so malloc the req memory 
+....................       malloc(size); 
+....................    else if(size==0) 
+....................    { 
+....................    free(ptr); 
+....................    } 
+....................    else 
+....................    { 
+....................       node=ptr-sizeof(node_t); 
+....................       if(bit_test(node->size,pos))// chk if valid pounsigned int8er 
+....................       { 
+....................          nsize=node->size-csize; 
+....................          temp=(unsigned int16)node->next; 
+....................          if(nsize>size)// block > req size 
+....................          { 
+....................         
+....................                if(!bit_test(temp->size,pos) && (temp==((unsigned int16)node+nsize+sizeof(node_t))))// next block free and consecutive 
+....................                { 
+....................                   update_node(node,size+csize); // update block 
+....................                   nextsize=temp->size; 
+....................                   remove_node(temp); 
+....................                   new=create_node(nextsize+(nsize-size),(unsigned int16)node+size+sizeof(node_t)); 
+....................                   insert_node_after(node,new); 
+....................                    
+....................  
+....................                } 
+....................                else if (nsize>size +sizeof(node_t))//node > req size, so split and add new node to memlist 
+....................                { 
+....................                   update_node(node,size+csize); // update block 
+....................                   new=create_node(nsize-size-sizeof(node_t),(unsigned int16)node+sizeof(node_t)+size); 
+....................                   insert_node_after(node,new); 
+....................                } 
+....................                else//not enough space for new node so use original size 
+....................                update_node(node,nsize+csize); // update block 
+....................  
+....................          } 
+....................          else // block < req size 
+....................          { 
+....................             if(!bit_test(temp->size,pos) && (temp==((unsigned int16)node+nsize+sizeof(node_t))))// next block free and consecutive 
+....................             { 
+....................                nextsize=temp->size; 
+....................                if(nextsize>=size-nsize) // next block >=difference 
+....................                { 
+....................                   if(nextsize>size-nsize+sizeof(node_t))//next node > req size, so split and add new node to memlist 
+....................                   { 
+....................                       update_node(node,size+csize);// update block 
+....................                       remove_node(temp); 
+....................                       new=create_node(nextsize-(size-nsize),(unsigned int16)node+size+sizeof(node_t)); 
+....................                       insert_node_after(node,new); 
+....................                   } 
+....................                   else//not enough space for new node in next node, so use original size 
+....................                   { 
+....................                       update_node(node,nsize+nextsize+csize);// update block 
+....................                       remove_node(temp); 
+....................                   } 
+....................                } 
+....................             } 
+....................          } 
+....................          return (char *)node+sizeof(node_t); // return pounsigned int8er to the reallocated block 
+....................       } 
+....................       else // not allocated use malloc 
+....................       { 
+....................          malloc(size); 
+....................          //return; 
+....................       } 
+....................    } 
+....................  } 
+.................... #ENDIF 
+....................  
+.................... //#include <math.h> 
+....................  
+....................  
+.................... #FUSES NOWDT                    //No Watch Dog Timer 
+.................... #FUSES INTRC_IO                    //Internal RC Osc 
+.................... #FUSES NOPUT                    //No Power Up Timer 
+.................... #FUSES NOPROTECT                //Code not protected from reading 
+.................... #FUSES BROWNOUT                 //Reset when brownout detected 
+.................... #FUSES NOMCLR                     //Master Clear pin enabled 
+.................... #FUSES LVP                      //Low Voltage Programming on B3(PIC16) or B5(PIC18) 
+.................... #FUSES NOCPD                    //No EE protection 
+....................  
+.................... #use delay(clock=4000000) 
+....................  
+.................... #use rs232(baud=9600,parity=N,xmit=PIN_B2,rcv=PIN_B1,bits=8) 
+....................  
+.................... //--Definições------------------------------------------------------------------ 
+.................... #define LIGADO 0xFF 
+.................... #define DESLIGADO 0x00 
+....................  
+....................  
+.................... #define SAIDA_0    PIN_A0 
+.................... #define SAIDA_1    PIN_A1 
+.................... #define SAIDA_2    PIN_A2 
+.................... #define SAIDA_3    PIN_A3 
+....................  
+.................... #define ENTRADA_0    PIN_A4 
+.................... #define ENTRADA_1    PIN_A5 
+.................... #define ENTRADA_2    PIN_A6 
+.................... #define ENTRADA_3    PIN_A7 
+....................  
+.................... #define NUM_SAIDA_D  4  
+.................... #define NUM_ENT_D    4  
+.................... #define NUM_ENT_A    4  
+....................  
+....................  
+.................... //--Declaração de Tipos e Variáveis--------------------------------------------- 
+....................  
+.................... typedef struct _Porta { 
+....................      int Valor; 
+....................      int Id; 
+.................... } Porta; 
+....................  
+....................  
+.................... typedef struct _StatusEntradas { 
+....................      Porta EntD[NUM_ENT_D]; 
+....................      Porta EntA[NUM_ENT_A]; 
+.................... } StatusEntradasD; 
+....................  
+.................... typedef struct _StatusSaidas { 
+....................      Porta SaidaD[NUM_SAIDA_D]; 
+.................... } StatusSaidasD; 
+....................  
+.................... typedef struct _StatusPortas { 
+....................      StatusSaidasD Saidas; 
+....................      StatusEntradasD Entradas; 
+....................       
+.................... }StatusPortas; 
+....................  
+.................... StatusPortas Portas; 
+....................  
+.................... //--Declaração de Funções------------------------------------------------------- 
+.................... void Inicializar(); 
+.................... void Pisca(); 
+.................... void AtualizarSaidasD(); 
+.................... void AtualizarEntradasD(); 
+.................... void AtualizarEntradasA(); 
+.................... void EnviarSaidasD(); 
+.................... void EnviarEntradasD(); 
+.................... void EnviarEntradasA(); 
+.................... void Espera(); 
+.................... void SetarSaidaDigital(char*Str); 
+.................... char PegarChar(); 
+.................... char * PegarStr();  
+.................... void LimparBuffer(); 
+.................... //------------------------------------------------------------------------------ 
+.................... void main() 
+.................... { 
+*
+04CD:  CLRF   2A
+04CE:  MOVLW  6A
+04CF:  MOVWF  29
+04D0:  MOVLW  0A
+04D1:  MOVWF  6A
+04D2:  CLRF   6C
+04D3:  MOVLW  A0
+04D4:  MOVWF  6B
+04D5:  MOVLW  4D
+04D6:  BSF    03.5
+04D7:  MOVWF  20
+04D8:  MOVLW  01
+04D9:  MOVWF  22
+04DA:  MOVLW  20
+04DB:  MOVWF  21
+04DC:  MOVLW  2D
+04DD:  BCF    03.5
+04DE:  BSF    03.6
+04DF:  MOVWF  20
+04E0:  CLRF   22
+04E1:  CLRF   21
+04E2:  BCF    03.6
+04E3:  CLRF   04
+04E4:  BCF    03.7
+04E5:  MOVLW  1F
+04E6:  ANDWF  03,F
+04E7:  BSF    03.5
+04E8:  BSF    0E.3
+04E9:  MOVLW  19
+04EA:  MOVWF  19
+04EB:  MOVLW  A6
+04EC:  MOVWF  18
+04ED:  MOVLW  90
+04EE:  BCF    03.5
+04EF:  MOVWF  18
+04F0:  MOVLW  07
+04F1:  MOVWF  1F
+....................    Inicializar(); 
+*
+04F3:  GOTO   357
+....................  
+....................  
+....................    for(;;) 
+....................    { 
+....................     AtualizarSaidasD(); 
+04F4:  GOTO   3BB
+....................     AtualizarEntradasD(); 
+04F5:  GOTO   40C
+....................     //AtualizarEntradasA(); 
+....................      
+....................     EnviarSaidasD(); 
+04F6:  GOTO   457
+....................     EnviarEntradasD(); 
+04F7:  GOTO   47F
+....................     //EnviarEntradasA(); 
+....................      
+....................     Pisca(); 
+04F8:  GOTO   4AF
+....................     Espera(); 
+04F9:  GOTO   4BF
+....................      
+....................     enable_interrupts(INT_RDA); 
+04FA:  BSF    03.5
+04FB:  BSF    0C.5
+....................     enable_interrupts(GLOBAL); 
+04FC:  MOVLW  C0
+04FD:  BCF    03.5
+04FE:  IORWF  0B,F
+....................    } 
+04FF:  GOTO   4F4
+....................  
+.................... } 
+.................... //------------------------------------------------------------------------------ 
+.................... void Inicializar() 
+.................... { 
+0500:  SLEEP
+....................    setup_timer_0(RTCC_INTERNAL|RTCC_DIV_1); 
+*
+0357:  BSF    03.5
+0358:  MOVF   01,W
+0359:  ANDLW  C7
+035A:  IORLW  08
+035B:  MOVWF  01
+....................    setup_timer_1(T1_DISABLED); 
+035C:  BCF    03.5
+035D:  CLRF   10
+....................    setup_timer_2(T2_DISABLED,0,1); 
+035E:  MOVLW  00
+035F:  MOVWF  78
+0360:  MOVWF  12
+0361:  MOVLW  00
+0362:  BSF    03.5
+0363:  MOVWF  12
+....................    setup_comparator(NC_NC_NC_NC); 
+0364:  MOVLW  07
+0365:  BCF    03.5
+0366:  MOVWF  1F
+0367:  BSF    03.5
+0368:  MOVF   05,W
+0369:  MOVLW  03
+036A:  MOVWF  77
+036B:  DECFSZ 77,F
+036C:  GOTO   36B
+036D:  BCF    03.5
+036E:  MOVF   1F,W
+036F:  BCF    0C.6
+....................    setup_vref(FALSE); 
+0370:  BSF    03.5
+0371:  CLRF   1F
+....................    SET_TRIS_A(0b11110000); 
+0372:  MOVLW  F0
+0373:  TRIS   5
+....................    SET_TRIS_B(0b11111111); 
+0374:  MOVLW  FF
+0375:  TRIS   6
+....................     
+....................    Portas.Saidas.SaidaD[0].Valor = DESLIGADO; 
+0376:  BCF    03.5
+0377:  CLRF   2B
+....................    Portas.Saidas.SaidaD[1].Valor = DESLIGADO; 
+0378:  CLRF   2D
+....................    Portas.Saidas.SaidaD[2].Valor = DESLIGADO; 
+0379:  CLRF   2F
+....................    Portas.Saidas.SaidaD[3].Valor = DESLIGADO; 
+037A:  CLRF   31
+....................     
+....................    Portas.Saidas.SaidaD[0].Id = SAIDA_0; 
+037B:  MOVLW  28
+037C:  MOVWF  2C
+....................    Portas.Saidas.SaidaD[1].Id = SAIDA_1; 
+037D:  MOVLW  29
+037E:  MOVWF  2E
+....................    Portas.Saidas.SaidaD[2].Id = SAIDA_2; 
+037F:  MOVLW  2A
+0380:  MOVWF  30
+....................    Portas.Saidas.SaidaD[3].Id = SAIDA_3; 
+0381:  MOVLW  2B
+0382:  MOVWF  32
+....................     
+....................     
+....................    Portas.Entradas.EntD[0].Valor = DESLIGADO; 
+0383:  CLRF   33
+....................    Portas.Entradas.EntD[1].Valor = DESLIGADO; 
+0384:  CLRF   35
+....................    Portas.Entradas.EntD[2].Valor = DESLIGADO; 
+0385:  CLRF   37
+....................    Portas.Entradas.EntD[3].Valor = DESLIGADO; 
+0386:  CLRF   39
+....................     
+....................    Portas.Entradas.EntD[0].Id = ENTRADA_0;  
+0387:  MOVLW  2C
+0388:  MOVWF  34
+....................    Portas.Entradas.EntD[1].Id = ENTRADA_1; 
+0389:  MOVLW  2D
+038A:  MOVWF  36
+....................    Portas.Entradas.EntD[2].Id = ENTRADA_2; 
+038B:  MOVLW  2E
+038C:  MOVWF  38
+....................    Portas.Entradas.EntD[3].Id = ENTRADA_3; 
+038D:  MOVLW  2F
+038E:  MOVWF  3A
+....................     
+....................    Portas.Entradas.EntA[0].Valor = 0; 
+038F:  CLRF   3B
+....................    Portas.Entradas.EntA[1].Valor = 75; 
+0390:  MOVLW  4B
+0391:  MOVWF  3D
+....................    Portas.Entradas.EntA[2].Valor = 150; 
+0392:  MOVLW  96
+0393:  MOVWF  3F
+....................    Portas.Entradas.EntA[3].Valor = 225; 
+0394:  MOVLW  E1
+0395:  MOVWF  41
+....................     
+....................    Portas.Entradas.EntA[0].Id = 0;  
+0396:  CLRF   3C
+....................    Portas.Entradas.EntA[1].Id = 0; 
+0397:  CLRF   3E
+....................    Portas.Entradas.EntA[2].Id = 0; 
+0398:  CLRF   40
+....................    Portas.Entradas.EntA[3].Id = 0; 
+0399:  CLRF   42
+.................... } 
+039A:  GOTO   4F4 (RETURN)
+.................... //------------------------------------------------------------------------------ 
+.................... void Pisca() 
+.................... { 
+.................... static int Liga=0; 
+*
+04F2:  CLRF   43
+....................  
+....................     if(Liga) 
+*
+04AF:  MOVF   43,F
+04B0:  BTFSC  03.2
+04B1:  GOTO   4B8
+....................     { 
+....................      OUTPUT_HIGH(PIN_B0); 
+04B2:  BSF    03.5
+04B3:  BCF    06.0
+04B4:  BCF    03.5
+04B5:  BSF    06.0
+....................      Liga=0; 
+04B6:  CLRF   43
+....................     } 
+....................     else 
+04B7:  GOTO   4BE
+....................     { 
+....................      OUTPUT_LOW(PIN_B0); 
+04B8:  BSF    03.5
+04B9:  BCF    06.0
+04BA:  BCF    03.5
+04BB:  BCF    06.0
+....................      Liga=1; 
+04BC:  MOVLW  01
+04BD:  MOVWF  43
+....................     } 
+....................  
+.................... } 
+04BE:  GOTO   4F9 (RETURN)
+.................... //------------------------------------------------------------------------------ 
+.................... void Espera() 
+.................... { 
+....................  int x; 
+....................  int y; 
+....................   
+....................  for(x=0;x<255;x++) 
+04BF:  CLRF   44
+04C0:  INCFSZ 44,W
+04C1:  GOTO   4C3
+04C2:  GOTO   4CC
+....................   for(y=0;y<220;y++) 
+04C3:  CLRF   45
+04C4:  MOVF   45,W
+04C5:  SUBLW  DB
+04C6:  BTFSS  03.0
+04C7:  GOTO   4CA
+....................  { 
+....................   
+....................  
+....................  } 
+04C8:  INCF   45,F
+04C9:  GOTO   4C4
+04CA:  INCF   44,F
+04CB:  GOTO   4C0
+.................... } 
+04CC:  GOTO   4FA (RETURN)
+.................... //------------------------------------------------------------------------------ 
+.................... void AtualizarSaidasD() 
+.................... { 
+.................... int x=0; 
+*
+03BB:  CLRF   44
+....................  
+....................  for(x=0;x<NUM_SAIDA_D;x++) 
+03BC:  CLRF   44
+03BD:  MOVF   44,W
+03BE:  SUBLW  03
+03BF:  BTFSS  03.0
+03C0:  GOTO   3F4
+....................   if(Portas.Saidas.SaidaD[x].Valor == LIGADO) 
+03C1:  BCF    03.0
+03C2:  RLF    44,W
+03C3:  ADDLW  2B
+03C4:  MOVWF  04
+03C5:  BCF    03.7
+03C6:  INCFSZ 00,W
+03C7:  GOTO   3DE
+....................    OUTPUT_HIGH(Portas.Saidas.SaidaD[x].Id); 
+03C8:  BCF    03.0
+03C9:  RLF    44,W
+03CA:  ADDLW  01
+03CB:  ADDLW  2B
+03CC:  MOVWF  04
+03CD:  BCF    03.7
+03CE:  MOVF   00,W
+03CF:  MOVWF  46
+03D0:  MOVWF  48
+03D1:  MOVLW  01
+03D2:  MOVWF  49
+03D3:  CLRF   4B
+03D4:  CLRF   4A
+03D5:  CALL   39B
+03D6:  MOVF   46,W
+03D7:  MOVWF  48
+03D8:  CLRF   49
+03D9:  CLRF   4B
+03DA:  MOVLW  80
+03DB:  MOVWF  4A
+03DC:  CALL   39B
+....................   else 
+03DD:  GOTO   3F2
+....................    OUTPUT_LOW(Portas.Saidas.SaidaD[x].Id); 
+03DE:  BCF    03.0
+03DF:  RLF    44,W
+03E0:  ADDLW  01
+03E1:  ADDLW  2B
+03E2:  MOVWF  04
+03E3:  BCF    03.7
+03E4:  MOVF   00,W
+03E5:  MOVWF  46
+03E6:  MOVWF  48
+03E7:  CLRF   49
+03E8:  CLRF   4B
+03E9:  CLRF   4A
+03EA:  CALL   39B
+03EB:  MOVF   46,W
+03EC:  MOVWF  48
+03ED:  CLRF   49
+03EE:  CLRF   4B
+03EF:  MOVLW  80
+03F0:  MOVWF  4A
+03F1:  CALL   39B
+03F2:  INCF   44,F
+03F3:  GOTO   3BD
+....................     
+....................    
+.................... } 
+03F4:  GOTO   4F5 (RETURN)
+.................... //------------------------------------------------------------------------------ 
+.................... void AtualizarEntradasD() 
+.................... { 
+.................... int x=0; 
+*
+040C:  CLRF   44
+....................  
+....................  for(x=0;x<NUM_ENT_D;x++) 
+040D:  CLRF   44
+040E:  MOVF   44,W
+040F:  SUBLW  03
+0410:  BTFSS  03.0
+0411:  GOTO   456
+....................   if(!INPUT(Portas.Entradas.EntD[x].Id)) 
+0412:  BCF    03.0
+0413:  RLF    44,W
+0414:  ADDLW  08
+0415:  MOVWF  45
+0416:  CLRF   46
+0417:  BTFSC  03.0
+0418:  INCF   46,F
+0419:  MOVLW  01
+041A:  ADDWF  45,W
+041B:  MOVWF  78
+041C:  MOVF   46,W
+041D:  MOVWF  7A
+041E:  BTFSC  03.0
+041F:  INCF   7A,F
+0420:  MOVF   78,W
+0421:  ADDLW  2B
+0422:  MOVWF  04
+0423:  BCF    03.7
+0424:  BTFSC  7A.0
+0425:  BSF    03.7
+0426:  MOVF   00,W
+0427:  MOVWF  47
+0428:  MOVWF  48
+0429:  MOVLW  01
+042A:  MOVWF  49
+042B:  CLRF   4B
+042C:  MOVLW  80
+042D:  MOVWF  4A
+042E:  CALL   39B
+042F:  MOVF   47,W
+0430:  MOVWF  48
+0431:  CLRF   4A
+0432:  CLRF   49
+0433:  GOTO   3F5
+0434:  BTFSC  78.0
+0435:  GOTO   446
+....................    Portas.Entradas.EntD[x].Valor=LIGADO; 
+0436:  BCF    03.0
+0437:  RLF    44,W
+0438:  ADDLW  08
+0439:  MOVWF  45
+043A:  CLRF   46
+043B:  BTFSC  03.0
+043C:  INCF   46,F
+043D:  MOVLW  2B
+043E:  ADDWF  45,W
+043F:  MOVWF  04
+0440:  BCF    03.7
+0441:  BTFSC  46.0
+0442:  BSF    03.7
+0443:  MOVLW  FF
+0444:  MOVWF  00
+....................   else  
+0445:  GOTO   454
+....................    Portas.Entradas.EntD[x].Valor=DESLIGADO; 
+0446:  BCF    03.0
+0447:  RLF    44,W
+0448:  ADDLW  08
+0449:  MOVWF  45
+044A:  CLRF   46
+044B:  BTFSC  03.0
+044C:  INCF   46,F
+044D:  MOVLW  2B
+044E:  ADDWF  45,W
+044F:  MOVWF  04
+0450:  BCF    03.7
+0451:  BTFSC  46.0
+0452:  BSF    03.7
+0453:  CLRF   00
+0454:  INCF   44,F
+0455:  GOTO   40E
+.................... } 
+0456:  GOTO   4F6 (RETURN)
+.................... //------------------------------------------------------------------------------ 
+.................... void AtualizarEntradasA() 
+.................... { 
+.................... /*int x; 
+....................   
+....................  for(x=0;x<NUM_ENT_A;x++) 
+....................   Portas.Entradas.EntA[x].Valor++;    
+.................... */  
+.................... } 
+.................... //------------------------------------------------------------------------------ 
+.................... void EnviarSaidasD() 
+.................... { 
+....................  int x; 
+....................   
+....................  printf("SD"); 
+0457:  MOVLW  53
+0458:  BTFSS  0C.4
+0459:  GOTO   458
+045A:  MOVWF  19
+045B:  MOVLW  44
+045C:  BTFSS  0C.4
+045D:  GOTO   45C
+045E:  MOVWF  19
+....................   
+....................  for(x=0;x<NUM_SAIDA_D;x++) 
+045F:  CLRF   44
+0460:  MOVF   44,W
+0461:  SUBLW  03
+0462:  BTFSS  03.0
+0463:  GOTO   476
+....................   if(Portas.Saidas.SaidaD[x].Valor == LIGADO) 
+0464:  BCF    03.0
+0465:  RLF    44,W
+0466:  ADDLW  2B
+0467:  MOVWF  04
+0468:  BCF    03.7
+0469:  INCFSZ 00,W
+046A:  GOTO   470
+....................    putc('1'); 
+046B:  MOVLW  31
+046C:  BTFSS  0C.4
+046D:  GOTO   46C
+046E:  MOVWF  19
+....................   else  
+046F:  GOTO   474
+....................    putc('0'); 
+0470:  MOVLW  30
+0471:  BTFSS  0C.4
+0472:  GOTO   471
+0473:  MOVWF  19
+0474:  INCF   44,F
+0475:  GOTO   460
+....................    
+....................    
+....................   printf("%c%c",13,10); 
+0476:  MOVLW  0D
+0477:  BTFSS  0C.4
+0478:  GOTO   477
+0479:  MOVWF  19
+047A:  MOVLW  0A
+047B:  BTFSS  0C.4
+047C:  GOTO   47B
+047D:  MOVWF  19
+....................  
+.................... } 
+047E:  GOTO   4F7 (RETURN)
+.................... //------------------------------------------------------------------------------ 
+.................... void EnviarEntradasD() 
+.................... { 
+.................... int x;  
+....................   
+....................  printf("ED"); 
+047F:  MOVLW  45
+0480:  BTFSS  0C.4
+0481:  GOTO   480
+0482:  MOVWF  19
+0483:  MOVLW  44
+0484:  BTFSS  0C.4
+0485:  GOTO   484
+0486:  MOVWF  19
+....................   
+....................   
+....................  for(x=0;x<NUM_ENT_D;x++) 
+0487:  CLRF   44
+0488:  MOVF   44,W
+0489:  SUBLW  03
+048A:  BTFSS  03.0
+048B:  GOTO   4A6
+....................   if(Portas.Entradas.EntD[x].Valor == LIGADO) 
+048C:  BCF    03.0
+048D:  RLF    44,W
+048E:  ADDLW  08
+048F:  MOVWF  45
+0490:  CLRF   46
+0491:  BTFSC  03.0
+0492:  INCF   46,F
+0493:  MOVLW  2B
+0494:  ADDWF  45,W
+0495:  MOVWF  04
+0496:  BCF    03.7
+0497:  BTFSC  46.0
+0498:  BSF    03.7
+0499:  INCFSZ 00,W
+049A:  GOTO   4A0
+....................    putc('1'); 
+049B:  MOVLW  31
+049C:  BTFSS  0C.4
+049D:  GOTO   49C
+049E:  MOVWF  19
+....................   else  
+049F:  GOTO   4A4
+....................    putc('0'); 
+04A0:  MOVLW  30
+04A1:  BTFSS  0C.4
+04A2:  GOTO   4A1
+04A3:  MOVWF  19
+04A4:  INCF   44,F
+04A5:  GOTO   488
+....................   
+....................  printf("%c%c",13,10); 
+04A6:  MOVLW  0D
+04A7:  BTFSS  0C.4
+04A8:  GOTO   4A7
+04A9:  MOVWF  19
+04AA:  MOVLW  0A
+04AB:  BTFSS  0C.4
+04AC:  GOTO   4AB
+04AD:  MOVWF  19
+....................    
+....................    
+.................... } 
+04AE:  GOTO   4F8 (RETURN)
+.................... //------------------------------------------------------------------------------ 
+.................... void EnviarEntradasA() 
+.................... { 
+.................... int x;  
+....................  /* 
+....................  printf("EA"); 
+....................   
+....................   
+....................  for(x=0;x<NUM_ENT_A;x++) 
+....................   putc(sin(Portas.Entradas.EntA[x].Valor)); 
+....................     
+....................   
+....................  printf("%c%c",13,10);*/ 
+.................... } 
+.................... //------------------------------------------------------------------------------ 
+.................... #int_RDA 
+.................... void ReceberComando() 
+.................... { 
+....................  char * Str; 
+....................  Str=PegarStr(); 
+*
+01F1:  MOVF   79,W
+01F2:  MOVWF  4F
+01F3:  MOVF   78,W
+01F4:  MOVWF  4E
+....................  //printf("Str: %s",Str); 
+....................   
+....................  //CMDS0T 
+....................   
+....................  if(Str[0]=='C' && Str[1]=='M' && Str[2]=='D') 
+01F5:  MOVF   4E,W
+01F6:  MOVWF  04
+01F7:  BCF    03.7
+01F8:  BTFSC  4F.0
+01F9:  BSF    03.7
+01FA:  MOVF   00,W
+01FB:  SUBLW  43
+01FC:  BTFSS  03.2
+01FD:  GOTO   24C
+01FE:  MOVLW  01
+01FF:  ADDWF  4E,W
+0200:  MOVWF  04
+0201:  BCF    03.7
+0202:  BTFSC  4F.0
+0203:  BSF    03.7
+0204:  MOVF   00,W
+0205:  SUBLW  4D
+0206:  BTFSS  03.2
+0207:  GOTO   24C
+0208:  MOVLW  02
+0209:  ADDWF  4E,W
+020A:  MOVWF  04
+020B:  BCF    03.7
+020C:  BTFSC  4F.0
+020D:  BSF    03.7
+020E:  MOVF   00,W
+020F:  SUBLW  44
+0210:  BTFSS  03.2
+0211:  GOTO   24C
+....................  { 
+....................   switch(Str[3]) 
+....................   { 
+0212:  MOVLW  03
+0213:  ADDWF  4E,W
+0214:  MOVWF  04
+0215:  BCF    03.7
+0216:  BTFSC  4F.0
+0217:  BSF    03.7
+0218:  MOVF   00,W
+0219:  XORLW  53
+021A:  BTFSS  03.2
+021B:  GOTO   24B
+....................    case 'S': 
+....................     SetarSaidaDigital(Str); 
+021C:  MOVF   4F,W
+021D:  MOVWF  51
+021E:  MOVF   4E,W
+021F:  MOVWF  50
+....................    break; 
+*
+024A:  GOTO   24C
+....................    
+....................    default: 
+....................    
+....................    break; 
+024B:  GOTO   24C
+....................   } 
+....................  } 
+....................   
+....................  free(Str);  
+024C:  MOVF   4F,W
+024D:  MOVWF  51
+024E:  MOVF   4E,W
+024F:  MOVWF  50
+....................   
+.................... } 
+.................... //------------------------------------------------------------------------------ 
+*
+0354:  BCF    0C.5
+0355:  BCF    0A.3
+0356:  GOTO   022
+.................... void SetarSaidaDigital(char *Str) 
+.................... { 
+.................... int x; 
+....................  for(x=0;x<NUM_SAIDA_D;x++) 
+*
+0220:  CLRF   52
+0221:  MOVF   52,W
+0222:  SUBLW  03
+0223:  BTFSS  03.0
+0224:  GOTO   24A
+....................   if(x==(Str[4]-48))  
+0225:  MOVLW  04
+0226:  ADDWF  50,W
+0227:  MOVWF  04
+0228:  BCF    03.7
+0229:  BTFSC  51.0
+022A:  BSF    03.7
+022B:  MOVLW  30
+022C:  SUBWF  00,W
+022D:  SUBWF  52,W
+022E:  BTFSS  03.2
+022F:  GOTO   248
+....................    if(Str[5]=='F') 
+0230:  MOVLW  05
+0231:  ADDWF  50,W
+0232:  MOVWF  04
+0233:  BCF    03.7
+0234:  BTFSC  51.0
+0235:  BSF    03.7
+0236:  MOVF   00,W
+0237:  SUBLW  46
+0238:  BTFSS  03.2
+0239:  GOTO   241
+....................     Portas.Saidas.SaidaD[x].Valor = DESLIGADO; 
+023A:  BCF    03.0
+023B:  RLF    52,W
+023C:  ADDLW  2B
+023D:  MOVWF  04
+023E:  BCF    03.7
+023F:  CLRF   00
+....................    else  
+0240:  GOTO   248
+....................     Portas.Saidas.SaidaD[x].Valor = LIGADO; 
+0241:  BCF    03.0
+0242:  RLF    52,W
+0243:  ADDLW  2B
+0244:  MOVWF  04
+0245:  BCF    03.7
+0246:  MOVLW  FF
+0247:  MOVWF  00
+0248:  INCF   52,F
+0249:  GOTO   221
+....................    
+.................... } 
+.................... //------------------------------------------------------------------------------ 
+.................... char PegarChar() 
+.................... { 
+.................... int32 x; 
+....................  for(x=0;x<30000;x++) 
+*
+0180:  CLRF   57
+0181:  CLRF   56
+0182:  CLRF   55
+0183:  CLRF   54
+0184:  MOVF   57,F
+0185:  BTFSS  03.2
+0186:  GOTO   1A4
+0187:  MOVF   56,F
+0188:  BTFSS  03.2
+0189:  GOTO   1A4
+018A:  MOVF   55,W
+018B:  SUBLW  75
+018C:  BTFSS  03.0
+018D:  GOTO   1A4
+018E:  BTFSS  03.2
+018F:  GOTO   194
+0190:  MOVF   54,W
+0191:  SUBLW  2F
+0192:  BTFSS  03.0
+0193:  GOTO   1A4
+....................  if(KBHIT()) 
+0194:  BTFSS  0C.5
+0195:  GOTO   19B
+....................    return getc();  
+0196:  BTFSS  0C.5
+0197:  GOTO   196
+0198:  MOVF   1A,W
+0199:  MOVWF  78
+019A:  GOTO   1A6
+019B:  MOVLW  01
+019C:  ADDWF  54,F
+019D:  BTFSC  03.0
+019E:  INCF   55,F
+019F:  BTFSC  03.2
+01A0:  INCF   56,F
+01A1:  BTFSC  03.2
+01A2:  INCF   57,F
+01A3:  GOTO   184
+....................   
+....................  return 255; 
+01A4:  MOVLW  FF
+01A5:  MOVWF  78
+.................... } 
+.................... //------------------------------------------------------------------------------ 
+.................... char * PegarStr() 
+.................... { 
+.................... char *Str; 
+.................... char Temp; 
+.................... int x; 
+....................  
+....................   Str = malloc (15); 
+*
+0058:  MOVLW  0F
+0059:  MOVWF  54
+*
+015C:  MOVF   79,W
+015D:  MOVWF  51
+015E:  MOVF   78,W
+015F:  MOVWF  50
+....................    
+....................   if(Str == NULL) 
+0160:  MOVF   50,F
+0161:  BTFSS  03.2
+0162:  GOTO   174
+0163:  MOVF   51,F
+0164:  BTFSS  03.2
+0165:  GOTO   174
+....................   { 
+....................    printf("ERRO Ao alocar memoria");   
+0166:  CLRF   54
+0167:  MOVF   54,W
+0168:  CALL   035
+0169:  INCF   54,F
+016A:  MOVWF  77
+016B:  MOVF   77,W
+016C:  BTFSS  0C.4
+016D:  GOTO   16C
+016E:  MOVWF  19
+016F:  MOVLW  16
+0170:  SUBWF  54,W
+0171:  BTFSS  03.2
+0172:  GOTO   167
+....................    #asm 
+....................     GOTO 0x00 
+0173:  GOTO   000
+....................    #endasm 
+....................   } 
+....................  
+....................  Str[15]='\0'; 
+0174:  MOVLW  0F
+0175:  ADDWF  50,W
+0176:  MOVWF  04
+0177:  BCF    03.7
+0178:  BTFSC  51.0
+0179:  BSF    03.7
+017A:  CLRF   00
+....................  for(x=0;x<14;x++) 
+017B:  CLRF   53
+017C:  MOVF   53,W
+017D:  SUBLW  0D
+017E:  BTFSS  03.0
+017F:  GOTO   1DE
+....................  { 
+....................   Temp=PegarChar(); 
+*
+01A6:  MOVF   78,W
+01A7:  MOVWF  52
+....................    
+....................   if(Temp == 255) 
+01A8:  INCFSZ 52,W
+01A9:  GOTO   1B1
+....................   { 
+....................    Str[0]='\0'; 
+01AA:  MOVF   50,W
+01AB:  MOVWF  04
+01AC:  BCF    03.7
+01AD:  BTFSC  51.0
+01AE:  BSF    03.7
+01AF:  CLRF   00
+....................    break; 
+01B0:  GOTO   1DE
+....................   } 
+....................   if(x) 
+01B1:  MOVF   53,F
+01B2:  BTFSC  03.2
+01B3:  GOTO   1D4
+....................    if(Temp == 10 && Str[x-1] == 13) 
+01B4:  MOVF   52,W
+01B5:  SUBLW  0A
+01B6:  BTFSS  03.2
+01B7:  GOTO   1D4
+01B8:  MOVLW  01
+01B9:  SUBWF  53,W
+01BA:  ADDWF  50,W
+01BB:  MOVWF  04
+01BC:  BCF    03.7
+01BD:  BTFSC  51.0
+01BE:  BSF    03.7
+01BF:  MOVF   00,W
+01C0:  SUBLW  0D
+01C1:  BTFSS  03.2
+01C2:  GOTO   1D4
+....................    { 
+....................     Str[x]=Temp; 
+01C3:  MOVF   53,W
+01C4:  ADDWF  50,W
+01C5:  MOVWF  04
+01C6:  BCF    03.7
+01C7:  BTFSC  51.0
+01C8:  BSF    03.7
+01C9:  MOVF   52,W
+01CA:  MOVWF  00
+....................     Str[x+1]='\0'; 
+01CB:  MOVLW  01
+01CC:  ADDWF  53,W
+01CD:  ADDWF  50,W
+01CE:  MOVWF  04
+01CF:  BCF    03.7
+01D0:  BTFSC  51.0
+01D1:  BSF    03.7
+01D2:  CLRF   00
+....................     break; 
+01D3:  GOTO   1DE
+....................    } 
+....................    
+....................   Str[x] = Temp; 
+01D4:  MOVF   53,W
+01D5:  ADDWF  50,W
+01D6:  MOVWF  04
+01D7:  BCF    03.7
+01D8:  BTFSC  51.0
+01D9:  BSF    03.7
+01DA:  MOVF   52,W
+01DB:  MOVWF  00
+....................  } 
+01DC:  INCF   53,F
+01DD:  GOTO   17C
+....................   
+....................  LimparBuffer(); 
+....................  return Str; 
+*
+01ED:  MOVF   50,W
+01EE:  MOVWF  78
+01EF:  MOVF   51,W
+01F0:  MOVWF  79
+.................... } 
+.................... //------------------------------------------------------------------------------ 
+.................... void LimparBuffer() 
+.................... { 
+.................... int x; 
+.................... char Temp; 
+....................  for(x=0;x<150;) 
+*
+01DE:  CLRF   54
+01DF:  MOVF   54,W
+01E0:  SUBLW  95
+01E1:  BTFSS  03.0
+01E2:  GOTO   1ED
+....................  { 
+....................   if(KBHIT()) 
+01E3:  BTFSS  0C.5
+01E4:  GOTO   1EB
+....................   { 
+....................    x=0; 
+01E5:  CLRF   54
+....................    Temp=getc(); 
+01E6:  BTFSS  0C.5
+01E7:  GOTO   1E6
+01E8:  MOVF   1A,W
+01E9:  MOVWF  55
+....................   } 
+....................   else 
+01EA:  GOTO   1EC
+....................   { 
+....................    x++; 
+01EB:  INCF   54,F
+....................   } 
+....................    
+....................  } 
+01EC:  GOTO   1DF
+.................... } 
+.................... //------------------------------------------------------------------------------ 
+
+Configuration Fuses:
+   Word  1: 3FD8   NOWDT NOPUT NOPROTECT BROWNOUT NOMCLR LVP INTRC_IO NOCPD

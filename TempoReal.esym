@@ -1,0 +1,370 @@
+D G "__PCM__" 0 377 ""4.065""
+D G "__DEVICE__" 0 377 "628"
+D G "__DATE__" 0 377 ""24-jul-08""
+D G "__TIME__" 0 377 ""18:22:57"" "#                     Emulação de PLC em PIC                               #"
+d G "PIN_A0" 1 19 "40"
+d G "PIN_A1" 1 20 "41"
+d G "PIN_A2" 1 21 "42"
+d G "PIN_A3" 1 22 "43"
+d G "PIN_A4" 1 23 "44"
+d G "PIN_A5" 1 24 "45"
+d G "PIN_A6" 1 25 "46"
+d G "PIN_A7" 1 26 "47"
+d G "PIN_B0" 1 28 "48"
+d G "PIN_B1" 1 29 "49"
+d G "PIN_B2" 1 30 "50"
+d G "PIN_B3" 1 31 "51"
+d G "PIN_B4" 1 32 "52"
+d G "PIN_B5" 1 33 "53"
+d G "PIN_B6" 1 34 "54"
+d G "PIN_B7" 1 35 "55"
+d G "FALSE" 1 38 "0"
+d G "TRUE" 1 39 "1"
+d G "BYTE" 1 41 "int8"
+d G "BOOLEAN" 1 42 "int1"
+d G "getc" 1 44 "getch"
+d G "fgetc" 1 45 "getch"
+d G "getchar" 1 46 "getch"
+d G "putc" 1 47 "putchar"
+d G "fputc" 1 48 "putchar"
+d G "fgets" 1 49 "gets"
+d G "fputs" 1 50 "puts"
+d G "WDT_FROM_SLEEP" 1 55 "3"
+d G "WDT_TIMEOUT" 1 56 "11"
+d G "MCLR_FROM_SLEEP" 1 57 "19"
+d G "MCLR_FROM_RUN" 1 58 "27"
+d G "NORMAL_POWER_UP" 1 59 "25"
+d G "BROWNOUT_RESTART" 1 60 "26"
+d G "RTCC_INTERNAL" 1 68 "0"
+d G "RTCC_EXT_L_TO_H" 1 69 "32"
+d G "RTCC_EXT_H_TO_L" 1 70 "48"
+d G "RTCC_DIV_1" 1 72 "8"
+d G "RTCC_DIV_2" 1 73 "0"
+d G "RTCC_DIV_4" 1 74 "1"
+d G "RTCC_DIV_8" 1 75 "2"
+d G "RTCC_DIV_16" 1 76 "3"
+d G "RTCC_DIV_32" 1 77 "4"
+d G "RTCC_DIV_64" 1 78 "5"
+d G "RTCC_DIV_128" 1 79 "6"
+d G "RTCC_DIV_256" 1 80 "7"
+d G "RTCC_8_BIT" 1 83 "0"
+d G "WDT_18MS" 1 95 "0x8008"
+d G "WDT_36MS" 1 96 "9"
+d G "WDT_72MS" 1 97 "10"
+d G "WDT_144MS" 1 98 "11"
+d G "WDT_288MS" 1 99 "12"
+d G "WDT_576MS" 1 100 "13"
+d G "WDT_1152MS" 1 101 "14"
+d G "WDT_2304MS" 1 102 "15"
+d G "T1_DISABLED" 1 108 "0"
+d G "T1_INTERNAL" 1 109 "0x85"
+d G "T1_EXTERNAL" 1 110 "0x87"
+d G "T1_EXTERNAL_SYNC" 1 111 "0x83"
+d G "T1_CLK_OUT" 1 113 "8"
+d G "T1_DIV_BY_1" 1 115 "0"
+d G "T1_DIV_BY_2" 1 116 "0x10"
+d G "T1_DIV_BY_4" 1 117 "0x20"
+d G "T1_DIV_BY_8" 1 118 "0x30"
+d G "T2_DISABLED" 1 123 "0"
+d G "T2_DIV_BY_1" 1 124 "4"
+d G "T2_DIV_BY_4" 1 125 "5"
+d G "T2_DIV_BY_16" 1 126 "6"
+d G "CCP_OFF" 1 132 "0"
+d G "CCP_CAPTURE_FE" 1 133 "4"
+d G "CCP_CAPTURE_RE" 1 134 "5"
+d G "CCP_CAPTURE_DIV_4" 1 135 "6"
+d G "CCP_CAPTURE_DIV_16" 1 136 "7"
+d G "CCP_COMPARE_SET_ON_MATCH" 1 137 "8"
+d G "CCP_COMPARE_CLR_ON_MATCH" 1 138 "9"
+d G "CCP_COMPARE_INT" 1 139 "0xA"
+d G "CCP_COMPARE_RESET_TIMER" 1 140 "0xB"
+d G "CCP_PWM" 1 141 "0xC"
+d G "CCP_PWM_PLUS_1" 1 142 "0x1c"
+d G "CCP_PWM_PLUS_2" 1 143 "0x2c"
+d G "CCP_PWM_PLUS_3" 1 144 "0x3c"
+v G "CCP_1" 1 145 "int16"
+d G "UART_ADDRESS" 1 153 "2"
+d G "UART_DATA" 1 154 "4"
+d G "A0_A3_A1_A2" 1 158 "0xfff04"
+d G "A0_A2_A1_A2" 1 159 "0x7ff03"
+d G "NC_NC_A1_A2" 1 160 "0x6ff05"
+d G "NC_NC_NC_NC" 1 161 "0x0ff07"
+d G "A0_VR_A1_VR" 1 162 "0x3ff02"
+d G "A3_VR_A2_VR" 1 163 "0xcff0A"
+d G "A0_A2_A1_A2_OUT_ON_A3_A4" 1 164 "0x7e706"
+d G "A3_A2_A1_A2" 1 165 "0xeff09"
+d G "CP1_INVERT" 1 166 "0x00010"
+d G "CP2_INVERT" 1 167 "0x00020"
+d G "VREF_LOW" 1 175 "0xa0"
+d G "VREF_HIGH" 1 176 "0x80"
+d G "VREF_A2" 1 178 "0x40"
+d G "OSC_48KHZ" 1 182 "0"
+d G "OSC_4MHZ" 1 183 "8"
+d G "L_TO_H" 1 191 "0x40"
+d G "H_TO_L" 1 192 "0"
+d G "GLOBAL" 1 194 "0x0BC0"
+d G "INT_RTCC" 1 195 "0x0B20"
+d G "INT_RB" 1 196 "0xFF0B08"
+d G "INT_EXT" 1 197 "0x0B10"
+d G "INT_TBE" 1 198 "0x8C10"
+d G "INT_RDA" 1 199 "0x8C20"
+d G "INT_TIMER1" 1 200 "0x8C01"
+d G "INT_TIMER2" 1 201 "0x8C02"
+d G "INT_CCP1" 1 202 "0x8C04"
+d G "INT_COMP" 1 203 "0x8C40"
+d G "INT_TIMER0" 1 204 "0x0B20"
+d G "INT_EEPROM" 1 205 "0x8C80"
+D G "_STDLIBM" 2 14 ""
+D G "_STDDEF" 3 13 ""
+D G "ptrdiff_t" 3 18 "unsigned int16"
+D G "size_t" 3 21 "unsigned int8"
+D G "wchar_t" 3 22 "char"
+D G "NULL" 3 23 "0"
+D G "offsetof" 3 25 "(s,f) (offsetofbit(s,f)/8)"
+T G "node_t" 2 25 "{int8 size,int16 next}" "(C) Copyright 1996,2003 Custom Computer Services           ////"
+V L "size" 4 27 "int8"
+V L "ptr" 4 27 "*node_t" "create node at given location"
+F G "create_node" 4 28 "*node_t(int8 size,*node_t ptr)"
+V L "result" 4 29 "*node_t"
+V L "node" 4 36 "*node_t"
+V L "size" 4 36 "int8" "update the size of given node"
+F G "update_node" 4 37 "void(*node_t node,int8 size)"
+D G "csize" 4 41 "128"
+D G "pos" 4 42 "7"
+C L "insert_node_after" 4 3 2 "FUNCTION"
+V L "place" 4 46 "*node_t"
+V L "node" 4 46 "*node_t" "place the node after another given node"
+F G "insert_node_after" 4 47 "void(*node_t place,*node_t node)"
+V L "node" 4 57 "*node_t"
+F G "remove_node" 4 57 "void(*node_t node)" "remove the given node from the memlist"
+V L "ptr" 4 58 "*node_t"
+C L "traverse" 4 3 6 "FUNCTION"
+F G "traverse" 2 38 "void()"
+V L "node" 2 39 "*node_t"
+V L "temp" 2 39 "*node_t"
+V L "nsize" 2 40 "int16"
+V L "nextsize" 2 40 "int16"
+C L "traverse" 2 44 1 "FUNCTION"
+C L "traverse" 2 44 1 "FUNCTION"
+V L "size" 2 63 "int8"
+F G "malloc" 2 64 "*int8(int8 size)"
+V L "node" 2 65 "*node_t"
+V L "new" 2 65 "*node_t"
+V L "nsize" 2 66 "int16"
+C L "malloc" 2 44 1 "FUNCTION"
+C L "malloc" 2 44 1 "FUNCTION"
+C L "malloc" 2 44 1 "FUNCTION"
+C L "malloc" 2 44 1 "FUNCTION"
+C L "malloc" 2 44 1 "FUNCTION"
+C L "malloc" 2 44 1 "FUNCTION"
+C L "malloc" 2 44 1 "FUNCTION"
+C L "malloc" 2 44 1 "FUNCTION"
+C L "malloc" 2 44 1 "FUNCTION"
+C L "malloc" 2 44 1 "FUNCTION"
+V L "nmemb" 2 95 "int8"
+V L "size" 2 95 "int8"
+F G "calloc" 2 96 "*int8(int8 nmemb,int8 size)"
+V L "node" 2 97 "*node_t"
+V L "new" 2 97 "*node_t"
+V L "nsize" 2 98 "int16"
+V L "resize" 2 98 "int16"
+C L "calloc" 2 44 1 "FUNCTION"
+C L "calloc" 2 44 1 "FUNCTION"
+C L "calloc" 2 44 1 "FUNCTION"
+C L "calloc" 2 44 1 "FUNCTION"
+C L "calloc" 2 44 1 "FUNCTION"
+C L "calloc" 2 44 1 "FUNCTION"
+C L "calloc" 2 44 1 "FUNCTION"
+C L "calloc" 2 44 1 "FUNCTION"
+C L "calloc" 2 44 1 "FUNCTION"
+C L "calloc" 2 44 1 "FUNCTION"
+C L "calloc" 2 44 1 "FUNCTION"
+V L "ptr" 2 130 "*int8"
+F G "free" 2 131 "void(*int8 ptr)"
+V L "node" 2 132 "*node_t"
+V L "nsize" 2 133 "int16"
+C L "free" 2 44 1 "FUNCTION"
+C L "free" 2 44 1 "FUNCTION"
+C L "free" 2 44 1 "FUNCTION"
+V L "ptr" 2 156 "*int8"
+V L "size" 2 156 "int8"
+F G "realloc" 2 157 "*int8(*int8 ptr,int8 size)"
+V L "node" 2 158 "*node_t"
+V L "new" 2 158 "*node_t"
+V L "temp" 2 158 "*node_t"
+V L "nsize" 2 159 "int16"
+V L "nextsize" 2 159 "int16"
+C L "realloc" 2 44 1 "FUNCTION"
+C L "realloc" 2 44 1 "FUNCTION"
+C L "realloc" 2 44 1 "FUNCTION"
+C L "realloc" 2 44 1 "FUNCTION"
+C L "realloc" 2 44 1 "FUNCTION"
+C L "realloc" 2 44 1 "FUNCTION"
+C L "realloc" 2 44 1 "FUNCTION"
+C L "realloc" 2 44 1 "FUNCTION"
+C L "realloc" 2 44 1 "FUNCTION"
+C L "realloc" 2 44 1 "FUNCTION"
+C L "realloc" 2 44 1 "FUNCTION"
+C L "realloc" 2 44 1 "FUNCTION"
+C L "realloc" 2 44 1 "FUNCTION"
+C L "realloc" 2 44 1 "FUNCTION"
+C L "realloc" 2 44 1 "FUNCTION"
+C L "realloc" 2 44 1 "FUNCTION"
+C L "realloc" 2 44 1 "FUNCTION"
+C L "realloc" 2 44 1 "FUNCTION"
+C L "realloc" 2 44 1 "FUNCTION"
+D G "LIGADO" 0 30 "0xFF"
+D G "DESLIGADO" 0 31 "0x00"
+D G "SAIDA_0" 0 34 "PIN_A0"
+D G "SAIDA_1" 0 35 "PIN_A1"
+D G "SAIDA_2" 0 36 "PIN_A2"
+D G "SAIDA_3" 0 37 "PIN_A3"
+D G "ENTRADA_0" 0 39 "PIN_A4"
+D G "ENTRADA_1" 0 40 "PIN_A5"
+D G "ENTRADA_2" 0 41 "PIN_A6"
+D G "ENTRADA_3" 0 42 "PIN_A7"
+D G "NUM_SAIDA_D" 0 44 "4"
+D G "NUM_ENT_D" 0 45 "4"
+D G "NUM_ENT_A" 0 46 "4"
+T G "Porta" 0 54 "{int8 Valor,int8 Id}"
+T G "StatusEntradasD" 0 60 "{Porta[4] EntD,Porta[4] EntA}"
+T G "StatusSaidasD" 0 64 "{Porta[4] SaidaD}"
+T G "StatusPortas" 0 70 "{StatusSaidasD Saidas,StatusEntradasD Entradas}"
+V G "Portas" 0 72 "StatusPortas" "--Declaração de Funções-------------------------------------------------------"
+F G "Inicializar" 0 75 "void()"
+F G "Pisca" 0 76 "void()"
+F G "AtualizarSaidasD" 0 77 "void()"
+F G "AtualizarEntradasD" 0 78 "void()"
+F G "AtualizarEntradasA" 0 79 "void()"
+F G "EnviarSaidasD" 0 80 "void()"
+F G "EnviarEntradasD" 0 81 "void()"
+F G "EnviarEntradasA" 0 82 "void()"
+F G "Espera" 0 83 "void()"
+V L "Str" 0 84 "*int8"
+F G "SetarSaidaDigital" 0 84 "void(*int8 Str)"
+F G "PegarChar" 0 85 "int8()"
+F G "PegarStr" 0 86 "*int8()"
+F G "LimparBuffer" 0 87 "void()" ""
+F G "MAIN" 0 90 "void()"
+C L "MAIN" 0 13 1 "FUNCTION"
+C L "MAIN" 0 13 1 "FUNCTION"
+F G "Inicializar" 0 114 "void()"
+F G "Pisca" 0 156 "void()"
+V L "Liga" 0 157 "int8"
+F G "Espera" 0 173 "void()"
+V L "x" 0 174 "int8"
+V L "y" 0 175 "int8"
+F G "AtualizarSaidasD" 0 186 "void()"
+V L "x" 0 187 "int8"
+F G "AtualizarEntradasD" 0 199 "void()"
+V L "x" 0 200 "int8"
+F G "AtualizarEntradasA" 0 210 "void()" "int x;"
+C L "AtualizarEntradasA" 0 13 2 "FUNCTION"
+F G "EnviarSaidasD" 0 219 "void()"
+V L "x" 0 220 "int8"
+F G "EnviarEntradasD" 0 236 "void()"
+V L "x" 0 237 "int8"
+F G "EnviarEntradasA" 0 254 "void()"
+V L "x" 0 255 "int8" "printf("EA");"
+C L "EnviarEntradasA" 0 13 3 "FUNCTION"
+F G "ReceberComando" 0 269 "void()"
+V L "Str" 0 270 "*int8"
+C L "ReceberComando" 0 13 2 "FUNCTION"
+V L "Str" 0 294 "*int8"
+F G "SetarSaidaDigital" 0 295 "void(*int8 Str)"
+V L "x" 0 296 "int8"
+F G "PegarChar" 0 307 "int8()"
+V L "x" 0 308 "int32"
+F G "PegarStr" 0 317 "*int8()"
+V L "Str" 0 318 "*int8"
+V L "temp" 0 319 "int8"
+V L "x" 0 320 "int8"
+F G "LimparBuffer" 0 358 "void()"
+V L "x" 0 359 "int8"
+V L "temp" 0 360 "int8"
+F B "reset_cpu" 0 0
+F B "abs" 1 0
+F B "sleep" 0 0
+F B "delay_cycles" 1 0
+F B "read_bank" 2 0
+F B "write_bank" 3 0
+F B "shift_left" 2 2
+F B "shift_right" 2 2
+F B "rotate_left" 2 0
+F B "rotate_right" 2 0
+F B "_mul" 2 0
+F B "strcpy" 2 0
+F B "memset" 3 0
+F B "memcpy" 3 0
+F B "isamoung" 2 0
+F B "isamong" 2 0
+F B "bit_set" 2 0
+F B "bit_clear" 2 0
+F B "bit_test" 2 0
+F B "toupper" 1 0
+F B "tolower" 1 0
+F B "swap" 1 0
+F B "printf" 1 255
+F B "fprintf" 1 255
+F B "sprintf" 1 255
+F B "make8" 2 0
+F B "make16" 2 0
+F B "make32" 1 255
+F B "label_address" 1 1
+F B "goto_address" 1 0
+F B "_va_arg" 1 0
+F B "offsetofbit" 2 2
+F B "enable_interrupts" 1 0
+F B "disable_interrupts" 1 0
+F B "interrupt_active" 1 0
+F B "clear_interrupt" 1 0
+F B "jump_to_isr" 1 0
+F B "ext_int_edge" 1 2
+F B "read_eeprom" 1 0
+F B "write_eeprom" 2 0
+F B "output_high" 1 0
+F B "output_low" 1 0
+F B "input" 1 0
+F B "input_state" 1 0
+F B "output_float" 1 0
+F B "output_drive" 1 0
+F B "output_bit" 1 1
+F B "output_toggle" 1 0
+F B "output_a" 1 0
+F B "output_b" 1 0
+F B "input_a" 0 0
+F B "input_b" 0 0
+F B "set_tris_a" 1 0
+F B "set_tris_b" 1 0
+F B "get_tris_a" 0 0
+F B "get_tris_b" 0 0
+F B "port_b_pullups" 1 0
+F B "setup_counters" 2 0
+F B "setup_wdt" 1 0
+F B "restart_cause" 0 0
+F B "restart_wdt" 0 0
+F B "get_rtcc" 0 0
+F B "set_rtcc" 1 0
+F B "get_timer0" 0 0
+F B "set_timer0" 1 0
+F B "setup_comparator" 1 0
+F B "setup_timer_0" 1 0
+F B "setup_timer_1" 1 0
+F B "get_timer1" 0 0
+F B "set_timer1" 1 0
+F B "setup_timer_2" 3 0
+F B "get_timer2" 0 0
+F B "set_timer2" 1 0
+F B "setup_ccp1" 1 0
+F B "set_pwm1_duty" 1 0
+F B "setup_vref" 1 0
+F B "setup_oscillator" 1 2
+F B "delay_ms" 1 0
+F B "delay_us" 1 0
+F B "putchar" 1 2
+F B "puts" 1 2
+F B "getch" 0 1
+F B "gets" 1 3
+F B "kbhit" 0 1
+F B "set_uart_speed" 1 3
+F B "setup_uart" 1 3

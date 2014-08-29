@@ -1,0 +1,64 @@
+[PROJECT]
+Target=TempoReal.hex
+Development_Mode=
+Processor_Text=PIC16F628A
+ToolSuite=CCS
+Processor=0x628A
+[C:\Documents and Settings\Mateus.MATEUS-CELERON\Desktop\Tempo Real\TempoReal]
+Type=4
+Path=
+FileList=
+BuildTool=
+OptionString=
+AdditionalOptionString=
+[mru-list]
+1=C:\Documents and Settings\Mateus.MATEUS-CELERON\Desktop\Tempo Real\TempoReal
+[Windows]
+0=0000 %S 0 0 796 451 3 0
+[Opened Files]
+1=C:\Documents and Settings\Mateus.MATEUS-CELERON\Desktop\Tempo Real\PIC\TempoReal.c
+2=C:\Documents and Settings\Mateus.MATEUS-CELERON\Desktop\Tempo Real\PIC\TempoReal.lst
+3=
+4=C:\Documents and Settings\Mateus.MATEUS-CELERON\Desktop\Tempo Real\TempoReal.sym
+5=C:\Documents and Settings\Mateus.MATEUS-CELERON\Desktop\Tempo Real\TempoReal.tre
+6=C:\Documents and Settings\Mateus.MATEUS-CELERON\Desktop\Tempo Real\TempoReal.sta
+7=C:\Documents and Settings\Mateus.MATEUS-CELERON\Desktop\Tempo Real\TempoReal.COF.txt
+8=c:\Arquivos de programas\PICC\drivers\math.h
+9=
+[Directories]
+Include=c:\Arquivos de programas\PICC\drivers\;c:\Arquivos de programas\PICC\devices\;
+Library=
+LinkerScript=
+[defines]
+enabled=0
+D1=
+V1=
+[fileformats]
+forcecoff=0
+debug=4
+error=2
+object=0
+list=0
+scratch=0
+sta=1
+tre=1
+allerrors=1
+allwarnings=1
+stayupne=3
+stayupoe=0
+[Target Data]
+BuildTool=C-COMPILER
+OptionString=+FM
+AdditionalOptionString=
+BuildRequired=1
+FileList=C:\Documents and Settings\Mateus.MATEUS-CELERON\Desktop\Tempo Real\PIC\TempoReal.c
+[TempoReal]
+Type=4
+Path=
+FileList=
+BuildTool=
+OptionString=
+AdditionalOptionString=
+[Units]
+Count=1
+1=TempoReal.c (main)

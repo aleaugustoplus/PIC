@@ -1,0 +1,32 @@
+ÀÄMateus
+   ÃÄMAIN  0/52  Ram=0
+   ³  ÃÄ??0??
+   ³  ÃÄInicializar  0/68  Ram=0
+   ³  ÃÄAtualizarSaidasD  0/58  Ram=3
+   ³  ³  ÃÄ@WRITEBITA  0/32  Ram=6
+   ³  ³  ÃÄ@WRITEBITA  0/32  Ram=6
+   ³  ³  ÃÄ@WRITEBITA  0/32  Ram=6
+   ³  ³  ÀÄ@WRITEBITA  0/32  Ram=6
+   ³  ÃÄAtualizarEntradasD  0/75  Ram=5
+   ³  ³  ÃÄ@WRITEBITA  0/32  Ram=6
+   ³  ³  ÀÄ@READBITA  0/23  Ram=5
+   ³  ÃÄEnviarSaidasD  0/40  Ram=3
+   ³  ÃÄEnviarEntradasD  0/48  Ram=4
+   ³  ÃÄPisca  0/16  Ram=0
+   ³  ÀÄEspera  0/14  Ram=2
+   ÀÄReceberComando  0/767  Ram=5
+      ÃÄPegarStr  (Inline)  Ram=7
+      ³  ÃÄmalloc  (Inline)  Ram=15
+      ³  ³  ÃÄcreate_node  (Inline)  Ram=7
+      ³  ³  ÃÄinsert_node_after  (Inline)  Ram=8
+      ³  ³  ÃÄupdate_node  0/8  Ram=5
+      ³  ³  ÀÄupdate_node  0/8  Ram=5
+      ³  ÃÄ@const158  0/27  Ram=0
+      ³  ÃÄPegarChar  (Inline)  Ram=4
+      ³  ÀÄLimparBuffer  (Inline)  Ram=2
+      ÃÄSetarSaidaDigital  (Inline)  Ram=6
+      ÀÄfree  (Inline)  Ram=7
+         ÃÄupdate_node  0/8  Ram=5
+         ÀÄtraverse  (Inline)  Ram=11
+            ÃÄremove_node  (Inline)  Ram=8
+            ÀÄupdate_node  0/8  Ram=5

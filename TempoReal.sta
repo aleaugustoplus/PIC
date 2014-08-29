@@ -1,0 +1,68 @@
+
+ROM used: 1281 (63%)
+          1281 (63%) including unused fragments
+
+          1 Average locations per line
+          5 Average locations per statement
+
+RAM used: 42 (19%) at main() level
+          80 (36%) worst case
+
+Stack used: 4 worst case (out of 6 total available)
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+  376   119  49  TempoReal.c
+  208     0   0  ..\..\..\..\..\Arquivos de programas\PICC\devices\16F628A.h
+  229   111  46  ..\..\..\..\..\Arquivos de programas\PICC\drivers\stdlibm.h
+   28     0   0  ..\..\..\..\..\Arquivos de programas\PICC\drivers\stddef.h
+   77    13   5  ..\..\..\..\..\Arquivos de programas\PICC\drivers\memmgmt.c
+----- -----
+  918   243 Total
+
+Page ROM  %  RAM   Vol Diff  Functions:
+---- --- --- ---   --- ----  ----------
+ Inline        7   144  3.5  create_node
+0      8   1   5    57  2.5  update_node
+ Inline        8   180  4.5  insert_node_after
+ Inline        8   187  3.6  remove_node
+ Inline       11   693  8.9  traverse
+ Inline       15   831 10.7  malloc
+ Inline        7   374  6.1  free
+0     52   4   0   147  1.7  MAIN
+0     68   5   0  2403  4.0  Inicializar
+0     16   1   0   132  2.6  Pisca
+0     14   1   2   147  3.3  Espera
+0     58   5   3   303  5.6  AtualizarSaidasD
+0     32   2   6    43  2.1  @WRITEBITA
+0     75   6   5   309  5.6  AtualizarEntradasD
+0     23   2   5   257  7.2  @READBITA
+0     40   3   3   270  5.8  EnviarSaidasD
+0     48   4   4   270  5.8  EnviarEntradasD
+0    767  60   5   279  6.4  ReceberComando
+ Inline        6   338  6.5  SetarSaidaDigital
+ Inline        4   123  3.8  PegarChar
+ Inline        7   677  7.7  PegarStr
+0     27   2   0   677  7.7  @const158
+ Inline        2   176  3.9  LimparBuffer
+
+Program metrics:
+    Functions               23
+    Statements              243
+    Comments                259
+    Volume (V)              15352
+    Difficilty (D)          121.6
+    Effort to implement (E) 1866332
+    Time to implement (T)   28 hours, 48 minutes
+    Est Delivered Bugs (B)  5
+    Cyclomatic Complexity   42
+    Maintainability (MI)    54
+
+ Segment     Used  Free
+-----------  ----  ----
+00000-00003     4  0  
+00004-00034    49  0  
+00035-007FF  1228  767  
+
+
+

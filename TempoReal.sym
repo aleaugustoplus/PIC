@@ -1,0 +1,167 @@
+004-005 @READ_PROGRAM_MEMORY8.P1
+004-005 @MEMSET.P2
+015     CCP_1_LOW
+015-016 CCP_1
+016     CCP_1_HIGH
+01F.6   C1OUT
+01F.7   C2OUT
+020     @INTERRUPT_AREA
+021     @INTERRUPT_AREA
+022     @INTERRUPT_AREA
+023     @INTERRUPT_AREA
+024     @INTERRUPT_AREA
+025     @INTERRUPT_AREA
+026     @INTERRUPT_AREA
+027     @INTERRUPT_AREA
+028     @INTERRUPT_AREA
+029-02A __DYNAMIC_HEAD
+02B-042 Portas
+043     Pisca.Liga
+044     Espera.x
+044     AtualizarEntradasD.x
+044     EnviarSaidasD.x
+044     EnviarEntradasD.x
+044     AtualizarSaidasD.x
+045     Espera.y
+045     AtualizarSaidasD.@SCRATCH1
+045     AtualizarEntradasD.@SCRATCH1
+045     EnviarSaidasD.@SCRATCH1
+045     EnviarEntradasD.@SCRATCH1
+046     AtualizarSaidasD.@SCRATCH2
+046     AtualizarEntradasD.@SCRATCH2
+046     EnviarSaidasD.@SCRATCH2
+046     EnviarEntradasD.@SCRATCH2
+047     AtualizarEntradasD.@SCRATCH3
+047     EnviarEntradasD.@SCRATCH3
+048     @READBITA.P1
+048     @WRITEBITA.P2
+048     AtualizarEntradasD.@SCRATCH4
+049     @WRITEBITA.P1
+049-04A @READBITA.P2
+04A-04B @WRITEBITA.P1
+04E-04F ReceberComando.Str
+050-051 SetarSaidaDigital.Str
+050-051 free.ptr
+050-051 PegarStr.Str
+050     ReceberComando.@SCRATCH1
+051     ReceberComando.@SCRATCH2
+052-053 free.node
+052     PegarStr.temp
+052     SetarSaidaDigital.x
+052     ReceberComando.@SCRATCH3
+053     PegarStr.x
+053     SetarSaidaDigital.@SCRATCH1
+054-055 free.nsize
+054     malloc.size
+054     LimparBuffer.x
+054-057 PegarChar.x
+054     SetarSaidaDigital.@SCRATCH2
+054     PegarStr.@SCRATCH1
+055     LimparBuffer.temp
+055-056 malloc.node
+055     SetarSaidaDigital.@SCRATCH3
+055     PegarStr.@SCRATCH2
+056-057 traverse.node
+056     free.@SCRATCH1
+056     PegarStr.@SCRATCH3
+057-058 malloc.new
+058-059 traverse.temp
+059-05A malloc.nsize
+05A-05B traverse.nsize
+05B-05C insert_node_after.place
+05B     malloc.@SCRATCH1
+05C-05D traverse.nextsize
+05C     malloc.@SCRATCH2
+05D-05E insert_node_after.node
+05D     malloc.@SCRATCH3
+05E-05F remove_node.node
+05E-05F update_node.node
+05E     traverse.@SCRATCH1
+05E     malloc.@SCRATCH4
+05F     insert_node_after.@SCRATCH1
+05F     traverse.@SCRATCH2
+05F     malloc.@SCRATCH5
+060-061 remove_node.ptr
+060     update_node.size
+060     insert_node_after.@SCRATCH2
+060     traverse.@SCRATCH3
+060     malloc.@SCRATCH6
+061     update_node.@SCRATCH1
+061     insert_node_after.@SCRATCH3
+061     malloc.@SCRATCH7
+062     update_node.@SCRATCH2
+062     insert_node_after.@SCRATCH4
+062     remove_node.@SCRATCH1
+062     malloc.@SCRATCH8
+063     create_node.size
+063     remove_node.@SCRATCH2
+064-065 create_node.ptr
+064     remove_node.@SCRATCH3
+065     remove_node.@SCRATCH4
+066-067 create_node.result
+068     create_node.@SCRATCH1
+069     create_node.@SCRATCH2
+077     @SCRATCH
+078     @SCRATCH
+078     _RETURN_
+079     @SCRATCH
+07A     @SCRATCH
+07B     @SCRATCH
+10D-10E @READ_PROGRAM_MEMORY8.P1
+
+ROM Allocation:
+00B0  create_node
+0050  update_node
+00D5  insert_node_after
+02E5  remove_node
+0280  traverse
+005A  malloc
+0250  free
+04CD  MAIN
+0357  Inicializar
+04AF  Pisca
+04BF  Espera
+03BB  AtualizarSaidasD
+039B  @WRITEBITA
+040C  AtualizarEntradasD
+03F5  @READBITA
+0457  EnviarSaidasD
+047F  EnviarEntradasD
+0058  ReceberComando
+0220  SetarSaidaDigital
+0180  PegarChar
+0058  PegarStr
+0035  @const158
+01DE  LimparBuffer
+04CD  @cinit
+
+Project Directory:
+    C:\Documents and Settings\Mateus.MATEUS-CELERON\Desktop\Tempo Real\PIC\
+
+Project Files:
+    TempoReal.c
+    ..\..\..\..\..\Arquivos de programas\PICC\devices\16F628A.h
+    ..\..\..\..\..\Arquivos de programas\PICC\drivers\stdlibm.h
+    ..\..\..\..\..\Arquivos de programas\PICC\drivers\stddef.h
+    ..\..\..\..\..\Arquivos de programas\PICC\drivers\memmgmt.c
+
+Units:
+    C:\Documents and Settings\Mateus.MATEUS-CELERON\Desktop\Tempo Real\PIC\TempoReal.c (main)
+
+Compiler Settings:
+    Processor:      PIC16F628A
+    Pointer Size:   16
+    Opt Level:      9
+    Short,Int,Long: UNSIGNED: 1,8,16
+    Float,Double:   32,32
+
+Output Files:
+    Errors:      TempoReal.err
+    Ext Symbols: TempoReal.esym
+    INHX8:       TempoReal.hex
+    Symbols:     TempoReal.sym
+    List:        TempoReal.lst
+    Debug/COFF:  TempoReal.cof
+    Project:     TempoReal.PJT
+    Call Tree:   TempoReal.tre
+    Statistics:  TempoReal.sta
